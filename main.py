@@ -9,9 +9,13 @@ from shot import Shot
 
 def main():
     pygame.init()
+    pygame.font.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     clock = pygame.time.Clock()
 
+    font = pygame.font.SysFont('Comic Sans MS', 45)
+    score = 0
+    
     updatable = pygame.sprite.Group()
     drawable = pygame.sprite.Group()
     asteroids = pygame.sprite.Group()
@@ -43,12 +47,21 @@ def main():
                 if asteroid.check_collision(shot):
                     asteroid.split()
                     shot.kill()
+                    if asteroid.radius == ASTEROID_MIN_RADIUS:
+                        score += SMALL_ASTEROIDS_POINTS
+                    elif asteroid.radius == ASTEROID_MAX_RADIUS:
+                        score += LARGE_ASTEROID_POINTS        
+                    else:
+                        score += MEDIUM_ASTEROID_POINTS
 
 
         screen.fill((0,0,0))
 
         for sprite in drawable:
             sprite.draw(screen)
+
+        text_surface = font.render(f"{score}", True, (255, 255, 255))
+        screen.blit(text_surface, (20, 20))
 
         pygame.display.flip()
 
